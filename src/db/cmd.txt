@@ -1,0 +1,1 @@
+C:\Users\Suryaprakasamc\mongodb\bin\mongod.exe --dbpath=/users/Suryaprakasamc/mongodb-data
