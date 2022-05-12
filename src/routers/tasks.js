@@ -30,29 +30,19 @@ router.get("/tasks", async (req, res) => {
   } catch (e) {
     res.status(400).send(e);
   }
-
-  // Task.find({})
-  //   .then((users) => {
-  //     res.send(users);
-  //   })
-  //   .catch((e) => {
-  //     res.status(400);
-  //     res.send(e);
-  //   });
 });
 
 router.patch("/tasks/:id", async (req, res) => {
-  //   const updates = Object.keys(req.body);
-  //   console.log(updates);
-  //   console.log(req.body);
-  //   const allowedUpdates = ["status"];
-  //   const isValidUpdate = updates.every((data) => {
-  //     allowedUpdates.includes(data);
-  //   });
+  const updates = Object.keys(req.body);
+  const allowedUpdates = ["taskname", "status"];
+  const isValidOperation = updates.every((update) =>
+    allowedUpdates.includes(update)
+  );
+
   //   console.log(isValidUpdate);
-  //   if (!isValidUpdate) {
-  //     return res.status(404).send("only  status allowed to modify");
-  //   }
+  if (!isValidOperation) {
+    return res.status(404).send("only  taskname and status  allowed to modify");
+  }
   try {
     const task = await Task.findByIdAndUpdate(req.params.id, req.body, {
       new: true,
