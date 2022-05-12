@@ -1,16 +1,16 @@
 {
   "name": "task-manager",
   "version": "1.0.0",
-  "description": "",
   "main": "index.js",
   "scripts": {
     "dev": "nodemon src/index.js -e js",
-    "start":"node src/index.js"
+    "start": "node src/index.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "express": "^4.18.1",
     "mongodb": "^3.1.10",
     "mongoose": "^6.3.3",
@@ -18,5 +18,14 @@
   },
   "devDependencies": {
     "nodemon": "^2.0.16"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/suryaRepos369/task-manager.git"
+  },
+  "bugs": {
+    "url": "https://github.com/suryaRepos369/task-manager/issues"
+  },
+  "homepage": "https://github.com/suryaRepos369/task-manager#readme",
+  "description": ""
 }
