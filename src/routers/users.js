@@ -3,11 +3,12 @@ const router = new express.Router();
 const User = require("../models/user");
 const app = express();
 app.use(express.json());
+const auth = require("../middleware/auth");
 
 ///////////////////////////////////////////////////////creating user////////////
-router.post("/users", async (req, res) => {
+router.post("/users/signup", async (req, res) => {
   const user1 = new User(req.body);
-  user1;
+
   // .save()
   // .then((user) => {
   //   res.status(201).send(user);
@@ -17,7 +18,8 @@ router.post("/users", async (req, res) => {
   // });
   try {
     const user = await user1.save();
-    res.status(201).send(user);
+    const token = await user.generateAuthToken();
+    res.status(201).send({ user, token });
   } catch (e) {
     res.status(400).send(e);
   }
@@ -25,7 +27,7 @@ router.post("/users", async (req, res) => {
 
 /////////Reading user//////////
 
-router.get("/users", async (req, res) => {
+router.get("/users", auth, async (req, res) => {
   try {
     const users = await User.find({});
     res.status(201).send(users);
