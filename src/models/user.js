@@ -21,13 +21,29 @@ const userSchema = mongoose.Schema({
   },
   email: {
     type: String,
+    unique: true,
     required: true,
     validate(value) {
       if (!validator.isEmail(value)) throw new Error("Email is incorrect");
     },
   },
 });
+///////////////checking email and pwd for login method
 
+userSchema.statics.findByCredentials = async (mail, password) => {
+  const userdata = await user.findOne({ email: mail });
+  if (!userdata) throw Error("unable to login");
+
+  const isMatch = await bcrypt.compare(password, userdata.password);
+
+  if (!isMatch) {
+    throw Error("unable to login");
+  }
+
+  return userdata;
+};
+
+////////////hashing plain password function
 userSchema.pre("save", async function (next) {
   const user = this;
   console.log("Just before saving");

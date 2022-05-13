@@ -36,6 +36,7 @@ router.get("/users", async (req, res) => {
 //update by id
 
 router.patch("/users/:id", async (req, res) => {
+  console.log(req.body);
   ///allowing the selected fields for updating
   const updates = Object.keys(req.body);
   const allowedUpdates = ["name", "email", "password", "age"];
@@ -73,6 +74,20 @@ router.get("/users/:id", async (req, res) => {
     res.status(201).send(user_res);
   } catch (e) {
     res.status(400).send(e);
+  }
+});
+
+router.post("/users/login", async (req, res) => {
+  // console.log(req.body.email);
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.send(user);
+    //  console.log("in User model checking", user);
+  } catch (e) {
+    res.status(404).send("Unable to log in ");
   }
 });
 
