@@ -27,13 +27,16 @@ router.post("/users/signup", async (req, res) => {
 
 /////////Reading user//////////
 
-router.get("/users", auth, async (req, res) => {
+router.get("/users", async (req, res) => {
   try {
     const users = await User.find({});
     res.status(201).send(users);
   } catch (e) {
     res.status(400).send(e);
   }
+});
+router.get("/users/me", auth, async (req, res) => {
+  res.send(req.user);
 });
 //update by id
 
@@ -103,9 +106,31 @@ router.post("/users/login", async (req, res) => {
       req.body.password
     );
     const token = await user.generateAuthToken();
-    res.send({ user, token });
+    res.status(200).send({ user, token });
   } catch (e) {
     res.status(400).send("Unable to login " + e);
+  }
+});
+
+router.post("/users/logout", auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter((token) => {
+      return token.token !== req.token;
+    });
+    await req.user.save();
+    res.status(200).send("Logged out ");
+  } catch (error) {
+    res.status(500).send(error);
+  }
+});
+//////////////////       Log out all tokens
+router.post("/users/logoutAll", auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send("Logged out from all sessions");
+  } catch (error) {
+    res.send(error);
   }
 });
 
