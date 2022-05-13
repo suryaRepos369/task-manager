@@ -1,6 +1,9 @@
 const mongoose = require("mongoose");
 const validator = require("validator");
 const bcrypt = require("bcryptjs");
+
+const jwt = require("jsonwebtoken");
+
 const userSchema = mongoose.Schema({
   name: { type: String, required: true },
   age: {
@@ -27,6 +30,15 @@ const userSchema = mongoose.Schema({
       if (!validator.isEmail(value)) throw new Error("Email is incorrect");
     },
   },
+
+  tokens: [
+    {
+      token: {
+        type: String,
+        required: true,
+      },
+    },
+  ],
 });
 ///////////////checking email and pwd for login method
 
@@ -41,6 +53,25 @@ userSchema.statics.findByCredentials = async (mail, password) => {
   }
 
   return userdata;
+};
+////////////using JWT feature///////////
+// userSchema.methods.generateAuthToken = async () => {
+//   const user = this;
+//   console.log("inside token generator");
+//   console.log(user._id.toString());
+//   const token = await jwt.sign({ _id: "surya" }, "this is testing");
+//   console.log(token);
+// };
+
+userSchema.methods.generateAuthToken = async function () {
+  const user = this;
+  console.log(user._id.toString());
+  const token = jwt.sign({ _id: user._id.toString() }, "thisismynewcourse");
+  console.log(token);
+  user.tokens = user.tokens.concat({ token });
+  await user.save();
+
+  return token;
 };
 
 ////////////hashing plain password function

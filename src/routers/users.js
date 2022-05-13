@@ -77,17 +77,33 @@ router.get("/users/:id", async (req, res) => {
   }
 });
 
+// router.post("/users/login", async (req, res) => {
+//   // console.log(req.body.email);
+//   try {
+//     const user = await User.findByCredentials(
+//       req.body.email,
+//       req.body.password
+//     );
+
+//     const token = await user.generateAuthToken();
+//     res.send({ user, token });
+
+//     //  console.log("in User model checking", user);
+//   } catch (e) {
+//     res.status(404).send("Unable to log in " + e);
+//   }
+// });
+
 router.post("/users/login", async (req, res) => {
-  // console.log(req.body.email);
   try {
     const user = await User.findByCredentials(
       req.body.email,
       req.body.password
     );
-    res.send(user);
-    //  console.log("in User model checking", user);
+    const token = await user.generateAuthToken();
+    res.send({ user, token });
   } catch (e) {
-    res.status(404).send("Unable to log in ");
+    res.status(400).send("Unable to login " + e);
   }
 });
 
